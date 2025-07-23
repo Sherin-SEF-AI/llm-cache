@@ -98,7 +98,7 @@ class ProxyMiddleware(BaseHTTPMiddleware):
         
         # Extract provider and model
         provider = self._extract_provider(request)
-        model = self._extract_model(request)
+        model = await self._extract_model(request)
         
         if not provider or not model:
             return await call_next(request)
@@ -167,10 +167,10 @@ class ProxyMiddleware(BaseHTTPMiddleware):
         
         return None
     
-    def _extract_model(self, request: Request) -> Optional[str]:
+    async def _extract_model(self, request: Request) -> Optional[str]:
         """Extract model from request body."""
         try:
-            body = request.body()
+            body = await request.body()
             if body:
                 data = json.loads(body)
                 return data.get("model")
